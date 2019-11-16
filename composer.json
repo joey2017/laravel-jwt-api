@@ -1,0 +1,36 @@
+{
+    "name": "leezj/laravel-jwt-api",
+    "description": "Laravel-JWT-API",
+    "keywords": [
+        "laravel",
+        "api"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "leezj",
+            "email": "leezongjun@163.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1",
+        "tymon/jwt-auth": "1.0.0-rc.4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Leezj\\LaravelApi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Leezj\\LaravelApi\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Leezj\\LaravelApi\\ApiServiceProvider"
+            ]
+        }
+    }
+}
