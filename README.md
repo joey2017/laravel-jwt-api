@@ -8,8 +8,9 @@
 ![php](https://img.shields.io/badge/php-%3E%3D%207.1-blueviolet.svg)
 ![mysql](https://img.shields.io/badge/mysql-%3E%3D%205.5-informational.svg)
 ![laravel](https://img.shields.io/badge/laravel-%3E%3D%205.5-red.svg)
-[![Latest Version](http://img.shields.io/packagist/v/cyd622/laravel-api.svg)](https://packagist.org/packages/cyd622/laravel-api)
-[![Monthly Downloads](https://img.shields.io/packagist/dm/cyd622/laravel-api.svg)](https://packagist.org/packages/cyd622/laravel-api)
+[![Latest Version](http://img.shields.io/packagist/v/leezj/laravel-api.svg)](https://packagist.org/packages/leezj/laravel-api)
+[![Monthly Downloads](https://img.shields.io/packagist/dm/leezjlaravel-api.svg)](https://packagist.org/packages/leezj/laravel-api)
+
 
 
 
