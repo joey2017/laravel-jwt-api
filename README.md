@@ -8,8 +8,6 @@
 ![php](https://img.shields.io/badge/php-%3E%3D%207.1-blueviolet.svg)
 ![mysql](https://img.shields.io/badge/mysql-%3E%3D%205.5-informational.svg)
 ![laravel](https://img.shields.io/badge/laravel-%3E%3D%205.5-red.svg)
-[![Latest Version](http://img.shields.io/packagist/v/leezj/laravel-api.svg)](https://packagist.org/packages/leezj/laravel-api)
-[![Monthly Downloads](https://img.shields.io/packagist/dm/leezjlaravel-api.svg)](https://packagist.org/packages/leezj/laravel-api)
 
 
 
@@ -105,9 +103,9 @@ php artisan vendor:publish --provider="Leezj\LaravelApi\ApiServiceProvider"
 // 成功返回 第一个参数可接受item和resource
 return $this->success($user,$meta);
 // 只返回信息无内容
-return $this->setHttpCode(201)->setStatusCode(1002001)->message('用户创建成功...');
+return $this->setHttpCode(201)->message('用户创建成功...');
 // 错误返回
-return $this->error('用户登录失败',401,10001);
+return $this->error('用户登录失败',401);
 ```
 
 
@@ -140,7 +138,7 @@ return $this->error('用户登录失败',401,10001);
 // 错误返回
 {
   "message": "Error",
-  "code": 104041,
+  "code": 401,
   "data": []
 }
 ```
@@ -200,7 +198,7 @@ public function render($request, Exception $exception)
         ],
         AuthenticationException::class => [
             'msg' => '未授权或Token签名失效',
-            'status_code' => 104013 // 响应体中code代码,可用于业务标识
+            'http_code' => 401 // 响应体中code代码,可用于业务标识
         ]
     ]
 ]
