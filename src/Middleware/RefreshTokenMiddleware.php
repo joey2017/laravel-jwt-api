@@ -63,7 +63,7 @@ class RefreshTokenMiddleware extends BaseMiddleware
                 throw new UnauthorizedHttpException('jwt-auth', $exception->getMessage());
             }
         } catch (TokenBlacklistedException $exception) {
-
+            throw new UnauthorizedHttpException('jwt-auth', '登录超时');
         }
         // Add token to request header
         return $this->setAuthenticationHeader($next($request), $token);

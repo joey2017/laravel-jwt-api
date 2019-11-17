@@ -66,24 +66,21 @@ class ExceptionReport
         NotFoundHttpException::class => [
             'msg' => '路由不存在',
             'http_code' => 404,
-            'status_code' => 104041
         ],
 
         ValidationException::class => [
+            'msg' => '未登录或登录超时',
             'http_code' => 422,
-            'status_code' => 104223
         ],
 
         BadMethodCallException::class => [
             'msg' => '方法调用错误',
             'http_code' => 500,
-            'status_code' => 105001
         ],
 
         MethodNotAllowedHttpException::class => [
             'msg' => '未允许的请求方式',
             'http_code' => 405,
-            'status_code' => 104221
         ],
 
         // Debug 错误
@@ -100,7 +97,6 @@ class ExceptionReport
         Exception::class => [
             'msg' => '服务错误',
             'http_code' => 500,
-            'status_code' => 1050022
         ],
 
     ];
@@ -127,10 +123,6 @@ class ExceptionReport
      */
     public function shouldReturn()
     {
-        /* if (!$this->request->expectsJson()) {
-             return false;
-         }*/
-
         // 异常越靠前权重越高
         // FIXME 将 Exception 顶级异常放到最后
         $reportList = array_keys($this->doReport);
@@ -163,21 +155,12 @@ class ExceptionReport
     {
         $reportMessage = $this->doReport[$this->report];
 
-        $httpCode = data_get($reportMessage, 'http_code', data_get($this->exception, 'status'));
+        $httpCode = data_get($reportMessage, 'http_code', data_get($this->exception, 'status')) ?? config('leezj.exception.default_http_code', 500);
 
-        // Symfony\Component\HttpKernel\Exception\HttpException 这种异常获取状态码需要以下方式获取
-        if (!$httpCode && method_exists($this->exception, 'getStatusCode')) {
-            $httpCode = $this->exception->getStatusCode();
+        // 设置了强制状态码
+        if (config('leezj.exception.force_http_code')) {
+            $httpCode = config('leezj.exception.force_http_code');
         }
-
-        // 如果什么都拿不到默认就500了
-        $httpCode = $httpCode ?? config('leezj.exception.default_http_code', 500);
-
-        $statusCode = data_get($reportMessage, 'status_code');
-        if (!$statusCode && method_exists($this->exception, 'getCode')) {
-            $statusCode = $this->exception->getCode();
-        }
-        $statusCode = $statusCode ?: $httpCode;
 
         // 非生产环境显示错误详情
         if (config('app.env') != 'production') {
@@ -191,11 +174,6 @@ class ExceptionReport
             $message = current($this->exception->validator->errors()->all());
         }
 
-        // 设置了强制状态码
-        if (config('leezj.exception.force_http_code')) {
-            $httpCode = config('leezj.exception.force_http_code');
-        }
-
-        return $this->setHttpCode($httpCode)->setStatusCode($statusCode)->message($message);
+        return $this->setHttpCode($httpCode)->message($message);
     }
 }

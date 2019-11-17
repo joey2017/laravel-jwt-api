@@ -20,13 +20,12 @@ return [
         'default_http_code' => 500,
         'do_report'         => [
             UnauthorizedHttpException::class => [
-                'msg'         => '未授权或Token签名失效',
-                'http_code'   => 401,
-                'status_code' => 104011
+                'msg'       => '未授权或Token签名失效',
+                'http_code' => 401,
             ],
             AuthenticationException::class   => [
-                'msg'         => '未授权或Token签名失效',
-                'status_code' => 104013
+                'msg'       => '未授权或Token签名失效',
+                'http_code' => 401
             ],
         ],
     ]

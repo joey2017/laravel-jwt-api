@@ -15,7 +15,6 @@ trait ApiResponse
     /**
      * @var int|null
      */
-    protected $statusCode;
 
     /**
      * @return int
@@ -32,24 +31,6 @@ trait ApiResponse
     public function setHttpCode($httpCode)
     {
         $this->httpCode = $httpCode;
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-
-    /**
-     * @param  $statusCode
-     * @return $this
-     */
-    public function setStatusCode($statusCode)
-    {
-        $this->statusCode = $statusCode;
         return $this;
     }
 
@@ -94,7 +75,7 @@ trait ApiResponse
         $responded = [
             'data' => $data,
             'message' => $message,
-            'code' => $this->statusCode ? $this->statusCode : $this->httpCode,
+            'code' => $this->httpCode,
         ];
 
         if ($meta) {
@@ -137,14 +118,12 @@ trait ApiResponse
     /**
      * @param string $message
      * @param int $httpCode
-     * @param int $statusCode
      * @return JsonResponse
      */
-    protected function error(string $message = 'Error', int $httpCode = null, int $statusCode = null)
+    protected function error(string $message = 'Error', int $httpCode = null)
     {
         $httpCode = $httpCode ?? Response::HTTP_BAD_REQUEST;
-        $statusCode = $statusCode ?? $httpCode;
-        return $this->setHttpCode($httpCode)->setStatusCode($statusCode)->message($message);
+        return $this->setHttpCode($httpCode)->message($message);
     }
 
     /**
@@ -153,7 +132,7 @@ trait ApiResponse
      */
     protected function internalError($message = 'Internal Error')
     {
-        return $this->error($message);
+        return $this->error($message,Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
