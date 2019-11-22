@@ -27,7 +27,7 @@ class RefreshTokenMiddleware extends BaseMiddleware
         // Get default guard
         $presentGuard = $guard ?? Auth::getDefaultDriver();
 
-        $token = $this->auth->getToken()->get();
+        //$token = $this->auth->getToken()->get();
 
         try {
 
@@ -37,7 +37,7 @@ class RefreshTokenMiddleware extends BaseMiddleware
                 throw new TokenInvalidException('auth guard invalid');
             }
 
-            if ($user = auth($presentGuard)->authenticate()) {
+            if ($user = /*auth($presentGuard)->authenticate()*/ $this->auth->parseToken()->authenticate()) {
                 $request->guard = $presentGuard;
                 return $next($request);
             }
