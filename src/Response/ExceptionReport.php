@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class ExceptionReport
 {
@@ -81,6 +82,11 @@ class ExceptionReport
         MethodNotAllowedHttpException::class => [
             'msg' => '未允许的请求方式',
             'http_code' => 405,
+        ],
+
+        TokenInvalidException::class => [
+            'msg' => 'token令牌签名无法验证',
+            'http_code' => 401,
         ],
 
         // Debug 错误
