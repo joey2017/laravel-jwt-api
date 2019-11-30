@@ -31,6 +31,7 @@ class RefreshTokenMiddleware extends BaseMiddleware
 
         try {
 
+            // get user
             if ($user = $this->auth->parseToken()->authenticate()) {
                 $request->guard = $presentGuard;
                 return $next($request);
