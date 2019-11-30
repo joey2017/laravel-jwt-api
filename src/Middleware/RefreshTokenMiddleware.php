@@ -31,13 +31,7 @@ class RefreshTokenMiddleware extends BaseMiddleware
 
         try {
 
-            $authGuard = $this->auth->getClaim('guard') ?? $guard;
-
-            if (!$authGuard || $authGuard != $presentGuard) {
-                throw new TokenInvalidException('auth guard invalid');
-            }
-
-            if ($user = auth($presentGuard)->authenticate()) {
+            if ($user = $this->auth->parseToken()->authenticate()) {
                 $request->guard = $presentGuard;
                 return $next($request);
             }
