@@ -71,7 +71,7 @@ trait LoginActionTrait
      */
     protected function authenticateClient(Request $request)
     {
-        $presentGuard = $request->get('guard', Auth::getDefaultDriver());
+        $presentGuard = $request->get('guard', substr($request->route()->getPrefix(),4)) ?? Auth::getDefaultDriver();
 
         $credentials = $this->credentials($request);
 
