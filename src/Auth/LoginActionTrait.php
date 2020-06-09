@@ -1,4 +1,5 @@
 <?php
+
 namespace Leezj\LaravelApi\Auth;
 
 use Illuminate\Http\Request;
@@ -71,7 +72,7 @@ trait LoginActionTrait
      */
     protected function authenticateClient(Request $request)
     {
-        $presentGuard = $request->get('guard', substr($request->route()->getPrefix(),4)) ?? Auth::getDefaultDriver();
+        $presentGuard = $request->get('guard', substr($request->route()->getPrefix(), 4)) ?? Auth::getDefaultDriver();
 
         $credentials = $this->credentials($request);
 
@@ -92,13 +93,11 @@ trait LoginActionTrait
                     // invalidated again, we catch the exception without any processing.
                 }
             }
-            $user->last_token = $token;
-            $user->save();
-            //SaveUserTokenJob::dispatch($user, $token, $presentGuard);
-            return $this->success($user, ['token_type' => 'Bearer', 'access_token' => $token,]);
+            SaveUserTokenJob::dispatch($user, $token, $presentGuard);
+            return $this->success($user, ['access_token' => 'Bearer ' . $token], __('admin.login_successful'));
         }
 
-        return $this->error('账号或密码错误', 400);
+        return $this->unauthorized('账号或密码错误', 401);
     }
 
     /**

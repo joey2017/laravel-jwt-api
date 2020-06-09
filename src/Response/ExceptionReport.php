@@ -180,6 +180,6 @@ class ExceptionReport
             $message = current($this->exception->validator->errors()->all());
         }
 
-        return $this->setHttpCode($httpCode)->message($message);
+        return $this->setReturnCode($httpCode)->message($message);
     }
 }

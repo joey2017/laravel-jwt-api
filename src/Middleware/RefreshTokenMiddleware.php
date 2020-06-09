@@ -27,11 +27,13 @@ class RefreshTokenMiddleware extends BaseMiddleware
         // Get default guard
         $presentGuard = $guard ?? Auth::getDefaultDriver();
 
-        $token = $this->auth->getToken()->get();
-
         //$payload = Auth::guard($presentGuard)->manager()->getJWTProvider()->decode($token);
 
         try {
+            
+            if ($this->auth->getToken()) {
+                $token = $this->auth->getToken()->get();
+            }
 
             $authGuard = $this->auth->getClaim('guard') ?? $guard;
 
@@ -56,8 +58,6 @@ class RefreshTokenMiddleware extends BaseMiddleware
 
                 // Save user token in job
                 $user = Auth::guard($presentGuard)->user();
-                $user->last_token = $token;
-                $user->save();
                 //SaveUserTokenJob::dispatch($user, $token, $presentGuard);
 
             } catch (JWTException $exception) {

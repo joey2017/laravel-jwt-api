@@ -1,4 +1,5 @@
 <?php
+
 namespace Leezj\LaravelApi\Response;
 
 use Illuminate\Http\JsonResponse;
@@ -12,25 +13,19 @@ trait ApiResponse
      * @var int $httpCode
      */
     protected $httpCode = Response::HTTP_OK;
-    /**
-     * @var int|null
-     */
 
     /**
-     * @return int
+     * @var int $returnCode
      */
-    public function getHttpCode()
-    {
-        return $this->httpCode;
-    }
+    protected $returnCode = Response::HTTP_OK;
 
     /**
-     * @param $httpCode
+     * @param $returnCode
      * @return $this
      */
-    public function setHttpCode($httpCode)
+    public function setReturnCode($returnCode)
     {
-        $this->httpCode = $httpCode;
+        $this->returnCode = $returnCode;
         return $this;
     }
 
@@ -41,7 +36,7 @@ trait ApiResponse
      */
     private function respond($data, array $header = [])
     {
-        $response = \response()->json($data, $this->getHttpCode(), $header);
+        $response = \response()->json($data, $this->httpCode, $header);
         if ($response->isSuccessful() && !$response->headers->has('ETag')) {
             $response->setEtag(sha1($response->getContent()));
         }
@@ -73,9 +68,10 @@ trait ApiResponse
         }
 
         $responded = [
-            'data' => $data,
-            'message' => $message,
-            'code' => $this->httpCode,
+            'data'       => $data,
+            'message'    => $message,
+            'code'       => $this->httpCode,
+            'returnCode' => $this->returnCode,
         ];
 
         if ($meta) {
@@ -99,9 +95,9 @@ trait ApiResponse
      * @param string $message
      * @return JsonResponse
      */
-    protected function created($message = 'Created')
+    protected function created($message = '创建成功！')
     {
-        return $this->setHttpCode(Response::HTTP_CREATED)->message($message);
+        return $this->setReturnCode(Response::HTTP_CREATED)->message($message);
     }
 
     /**
@@ -110,36 +106,36 @@ trait ApiResponse
      * @param string $message
      * @return JsonResponse
      */
-    protected function success($data, array $meta = null, $message = 'Success')
+    protected function success($data, array $meta = null, $message = '成功！')
     {
         return $this->buildRespond($message, $data, $meta ? $meta : []);
     }
 
     /**
      * @param string $message
-     * @param int $httpCode
+     * @param int $returnCode
      * @return JsonResponse
      */
-    protected function error(string $message = 'Error', int $httpCode = null)
+    protected function error(string $message = '错误！', int $returnCode = null)
     {
-        $httpCode = $httpCode ?? Response::HTTP_BAD_REQUEST;
-        return $this->setHttpCode($httpCode)->message($message);
+        $returnCode = $returnCode ?? Response::HTTP_BAD_REQUEST;
+        return $this->setReturnCode($returnCode)->message($message);
     }
 
     /**
      * @param string $message
      * @return JsonResponse
      */
-    protected function internalError($message = 'Internal Error')
+    protected function internalError($message = '服务器错误！')
     {
-        return $this->error($message,Response::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->error($message, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
      * @param string $message
      * @return JsonResponse
      */
-    protected function notFond($message = 'Not Fond')
+    protected function notFond($message = '未找到！')
     {
         return $this->error($message, Response::HTTP_NOT_FOUND);
     }
@@ -148,7 +144,7 @@ trait ApiResponse
      * @param string $message
      * @return JsonResponse
      */
-    protected function unauthorized($message = 'Unauthorized')
+    protected function unauthorized($message = '未授权！')
     {
         return $this->error($message, Response::HTTP_UNAUTHORIZED);
     }
@@ -157,7 +153,7 @@ trait ApiResponse
      * @param string $message
      * @return JsonResponse
      */
-    protected function forbidden($message = 'Forbidden')
+    protected function forbidden($message = '禁止！')
     {
         return $this->error($message, Response::HTTP_FORBIDDEN);
     }
@@ -166,7 +162,7 @@ trait ApiResponse
      * @param string $message
      * @return JsonResponse
      */
-    protected function unprocessableEntity($message = 'Unprocessable Entity')
+    protected function unprocessableEntity($message = '不可处理实体！')
     {
         return $this->error($message, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
