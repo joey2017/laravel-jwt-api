@@ -5,6 +5,7 @@ use Closure;
 use Illuminate\Support\Facades\Auth;
 use Leezj\LaravelApi\Jobs\SaveUserTokenJob;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
@@ -30,7 +31,7 @@ class RefreshTokenMiddleware extends BaseMiddleware
         //$payload = Auth::guard($presentGuard)->manager()->getJWTProvider()->decode($token);
 
         try {
-            
+
             if ($this->auth->getToken()) {
                 $token = $this->auth->getToken()->get();
             }
